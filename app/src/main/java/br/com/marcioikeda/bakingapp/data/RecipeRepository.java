@@ -7,6 +7,7 @@ import java.util.List;
 import br.com.marcioikeda.bakingapp.model.Recipe;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -44,8 +45,19 @@ public class RecipeRepository {
 
     public void getRecipes(Callback<List<Recipe>> callback) {
         Call<List<Recipe>> call = service.getRecipes();
-        call.enqueue(callback);
-    }
+        call.enqueue(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                if (response.isSuccessful()) {
+                    
+                }
+            }
 
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
 
 }
