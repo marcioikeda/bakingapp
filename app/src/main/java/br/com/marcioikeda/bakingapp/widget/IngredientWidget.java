@@ -5,7 +5,17 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
 
+
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import br.com.marcioikeda.bakingapp.R;
+import br.com.marcioikeda.bakingapp.data.RecipeRepository;
+import br.com.marcioikeda.bakingapp.model.Recipe;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Implementation of App Widget functionality.
@@ -19,8 +29,21 @@ public class IngredientWidget extends AppWidgetProvider {
         CharSequence widgetText = IngredientWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
 
+/*        RecipeRepository a;
+
+        a.getRecipes(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                views.setTextViewText(R.id.appwidget_text, widgetText);
+                appWidgetManager.updateAppWidget(appWidgetId, views);
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+
+            }
+        });*/
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

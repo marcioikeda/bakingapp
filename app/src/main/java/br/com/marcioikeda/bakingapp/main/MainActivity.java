@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         setContentView(R.layout.activity_main);
 
         mListAdapter = new RecipeListAdapter(this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_main);
+        mRecyclerView = findViewById(R.id.rv_main);
         mRecyclerView.setAdapter(mListAdapter);
 
         /*
