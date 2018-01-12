@@ -24,7 +24,7 @@ public interface RecipeDataSource {
 
     void getRecipes(@NonNull LoadRecipesCallBack callback);
 
-    void getRecipe(@NonNull GetRecipeCallBack callback);
+    void getRecipe(int id, @NonNull GetRecipeCallBack callback);
 
     void saveRecipes(@NonNull List<Recipe> recipes);
 

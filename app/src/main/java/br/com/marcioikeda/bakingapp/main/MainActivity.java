@@ -44,24 +44,21 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         */
 
         RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(@Nullable List<Recipe> recipes) {
-                ListIterator<Recipe> it = recipes.listIterator();
-                while(it.hasNext()) {
-                    Log.d(TAG, it.next().getName());
-                }
-                mListAdapter.setRecipes(recipes);
+        viewModel.getRecipes().observe(this, recipes -> {
+            ListIterator<Recipe> it = recipes.listIterator();
+            while(it.hasNext()) {
+                Log.d(TAG, it.next().getName());
             }
+            mListAdapter.setRecipes(recipes);
         });
 
     }
 
     @Override
-    public void onListItemClick(Recipe recipe) {
+    public void onListItemClick(int recipeId) {
         Intent intent = new Intent(this, RecipeActivity.class);
         Bundle extras = new Bundle();
-        extras.putParcelable(KEY_EXTRA_RECIPE, recipe);
+        extras.putInt(KEY_EXTRA_RECIPE, recipeId);
         intent.putExtras(extras);
         startActivity(intent);
     }

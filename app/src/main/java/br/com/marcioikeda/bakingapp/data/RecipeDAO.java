@@ -25,5 +25,5 @@ public interface RecipeDAO {
     public void deleteAllRecipes();
 
     @Query("SELECT * FROM recipes WHERE id IS :arg0")
-    public Recipe getRecipeWithid(int arg0);
+    public Recipe getRecipe(int arg0);
 }

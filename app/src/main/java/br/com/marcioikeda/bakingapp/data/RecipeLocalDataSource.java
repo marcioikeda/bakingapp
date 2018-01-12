@@ -61,11 +61,21 @@ public class RecipeLocalDataSource implements RecipeDataSource{
     }
 
     @Override
-    public void getRecipe(@NonNull GetRecipeCallBack callback) {
+    public void getRecipe(int id, @NonNull GetRecipeCallBack callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-
+                final Recipe recipe = mRecipesDao.getRecipe(id);
+                mAppExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (recipe != null) {
+                            callback.onRecipeLoaded(recipe);
+                        } else {
+                            callback.onDataNotAvailable();
+                        }
+                    }
+                });
             }
         };
         mAppExecutors.diskIO().execute(runnable);

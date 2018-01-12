@@ -25,7 +25,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     private final ListItemClickListener mListener;
 
     public interface ListItemClickListener {
-        void onListItemClick(Recipe recipe);
+        void onListItemClick(int recipeId);
     }
 
     public RecipeListAdapter(ListItemClickListener listener) {
@@ -80,16 +80,11 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
         public RecipeViewHolder(View itemView) {
             super(itemView);
-            tvRecipeName = (TextView) itemView.findViewById(R.id.tv_title);
-            tvServings = (TextView) itemView.findViewById(R.id.tv_subtitle);
-            ivImage = (ImageView) itemView.findViewById(R.id.iv_media);
-            tvAction = (TextView) itemView.findViewById(R.id.tv_action1);
-            tvAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onListItemClick(mRecipes.get(getAdapterPosition()));
-                }
-            });
+            tvRecipeName = itemView.findViewById(R.id.tv_title);
+            tvServings = itemView.findViewById(R.id.tv_subtitle);
+            ivImage = itemView.findViewById(R.id.iv_media);
+            tvAction = itemView.findViewById(R.id.tv_action1);
+            tvAction.setOnClickListener(v -> mListener.onListItemClick(mRecipes.get(getAdapterPosition()).getId()));
         }
     }
 }

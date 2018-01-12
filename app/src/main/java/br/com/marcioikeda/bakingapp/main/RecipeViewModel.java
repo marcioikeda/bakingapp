@@ -33,13 +33,17 @@ public class RecipeViewModel extends AndroidViewModel {
     public LiveData<List<Recipe>> getRecipes() {
         if (mRecipes == null) {
             mRecipes = new MutableLiveData<>();
-            loadRecipes();
+            loadRecipes(false);
         }
         return mRecipes;
     }
 
-    private void loadRecipes() {
-        // Always load from remote for now.
+    private void loadRecipes(boolean forceUpdate) {
+
+        if (forceUpdate) {
+            repos.refreshRecipes();
+        }
+
         repos.getRecipes(new RecipeDataSource.LoadRecipesCallBack() {
             @Override
             public void onRecipesLoaded(List<Recipe> recipes) {
@@ -52,4 +56,5 @@ public class RecipeViewModel extends AndroidViewModel {
             }
         });
     }
+
 }

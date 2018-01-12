@@ -1,5 +1,6 @@
 package br.com.marcioikeda.bakingapp.recipe;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import br.com.marcioikeda.bakingapp.R;
+import br.com.marcioikeda.bakingapp.main.RecipeViewModel;
 import br.com.marcioikeda.bakingapp.model.Recipe;
 import br.com.marcioikeda.bakingapp.model.Step;
 
@@ -43,43 +45,41 @@ public class RecipeActivity extends AppCompatActivity implements IngredientStepA
      */
     private boolean mTwoPane;
 
-    private Recipe mRecipe;
     private IngredientStepAdapter adapter;
+    private RecyclerView mRecyclerView;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
+        mRecyclerView = findViewById(R.id.item_list);
         //toolbar.setTitle(getTitle());
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mRecipe = extras.getParcelable(KEY_EXTRA_RECIPE);
-            if (mRecipe != null) {
-                toolbar.setTitle(mRecipe.getName());
-            }
+            int recipeId = extras.getInt(KEY_EXTRA_RECIPE);
+            RecipeDetailViewModel viewModel = ViewModelProviders.of(this).get(RecipeDetailViewModel.class);
+            viewModel.getRecipe(recipeId).observe(this, recipe -> {
+                mToolbar.setTitle(recipe.getName());
+                setSupportActionBar(mToolbar);
+                setupRecyclerView(mRecyclerView, recipe);
+            });
         }
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+        setSupportActionBar(mToolbar);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        View recyclerView = findViewById(R.id.item_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -108,10 +108,10 @@ public class RecipeActivity extends AppCompatActivity implements IngredientStepA
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView, Recipe recipe) {
         adapter = new IngredientStepAdapter(this, this);
-        if (mRecipe != null) {
-            adapter.setRecipe(mRecipe);
+        if (recipe != null) {
+            adapter.setRecipe(recipe);
         }
         recyclerView.setAdapter(adapter);
 
