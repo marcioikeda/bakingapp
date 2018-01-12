@@ -63,6 +63,10 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
         if (position == 0) {
             return SERVINGS;
         } else if (items.get(position) instanceof String) {
+            String string = (String) items.get(position);
+            if (string.equals(R.string.ingredients_title)) {
+                return STEP;
+            }
             return TITLE;
         } else if (items.get(position) instanceof Ingredient) {
             return INGREDIENT;
@@ -144,7 +148,7 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
 
         public TitleViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.tv_list_subtitle);
+            textView = itemView.findViewById(R.id.tv_list_subtitle);
         }
     }
 
@@ -154,8 +158,8 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
 
         public IngredientViewHolder(View itemView) {
             super(itemView);
-            tvIngredient = (TextView) itemView.findViewById(R.id.tv_ingredient_name);
-            tvQuantity = (TextView) itemView.findViewById(R.id.tv_ingredient_quantity);
+            tvIngredient = itemView.findViewById(R.id.tv_ingredient_name);
+            tvQuantity = itemView.findViewById(R.id.tv_ingredient_quantity);
         }
     }
 
@@ -164,7 +168,7 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
 
         public StepViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.tv_step_title);
+            textView = itemView.findViewById(R.id.tv_step_title);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
