@@ -8,6 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,8 @@ import br.com.marcioikeda.bakingapp.data.RecipeDAO;
 import br.com.marcioikeda.bakingapp.data.RecipeDatabase;
 import br.com.marcioikeda.bakingapp.model.Recipe;
 
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -71,5 +74,10 @@ public class RecipeDbTest {
             list.add(recipe);
             mRecipeDAO.insertRecipes(list);
         }
+
+        List<Recipe> recipes = mRecipeDAO.getRecipes();
+        Recipe recipeFromDb = recipes.get(0);
+        assertNotNull(recipeFromDb);
+        assertEquals(recipeFromDb.getName(), "Nutella Pie");
     }
 }
