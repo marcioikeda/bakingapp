@@ -2,7 +2,11 @@ package br.com.marcioikeda.bakingapp.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
 
@@ -11,7 +15,9 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import br.com.marcioikeda.bakingapp.R;
+import br.com.marcioikeda.bakingapp.data.RecipeDataSource;
 import br.com.marcioikeda.bakingapp.data.RecipeRepository;
+import br.com.marcioikeda.bakingapp.main.RecipeViewModel;
 import br.com.marcioikeda.bakingapp.model.Recipe;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,26 +32,32 @@ public class IngredientWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = IngredientWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
+        int recipePref = IngredientWidgetConfigureActivity.loadRecipePref(context, appWidgetId);
 
-/*        RecipeRepository a;
-
-        a.getRecipes(new Callback<List<Recipe>>() {
+        RecipeRepository repos = RecipeRepository.getInstance(context);
+        repos.getRecipe(recipePref, new RecipeDataSource.GetRecipeCallBack() {
             @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                views.setTextViewText(R.id.appwidget_text, widgetText);
+            public void onRecipeLoaded(Recipe recipe) {
+                //RemoteViews Service needed to provide adapter for ListView
+                Intent svcIntent = new Intent(context, IngredientWidgetService.class);
+                //passing app widget id to that RemoteViews Service
+                svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                //setting a unique Uri to the intent
+                //don't know its purpose to me right now
+                svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+                //setting adapter to listview of the widget
+                // Construct the RemoteViews object
+                RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
+                views.setRemoteAdapter(R.id.listView, svcIntent);
+                views.setTextViewText(R.id.tv_title, recipe.getName());
                 appWidgetManager.updateAppWidget(appWidgetId, views);
             }
 
             @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+            public void onDataNotAvailable() {
 
             }
-        });*/
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        });
     }
 
     @Override
@@ -60,7 +72,7 @@ public class IngredientWidget extends AppWidgetProvider {
     public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
         for (int appWidgetId : appWidgetIds) {
-            IngredientWidgetConfigureActivity.deleteTitlePref(context, appWidgetId);
+            IngredientWidgetConfigureActivity.deleteRecipePref(context, appWidgetId);
         }
     }
 

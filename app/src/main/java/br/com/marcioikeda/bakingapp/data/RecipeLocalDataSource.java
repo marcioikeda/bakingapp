@@ -74,10 +74,12 @@ public class RecipeLocalDataSource implements RecipeDataSource{
             @Override
             public void run() {
                 final Recipe recipe = mRecipesDao.getRecipe(id);
-                List<Step> steps = mRecipesDao.getSteps(id);
-                List<Ingredient> ingredients = mRecipesDao.getIngredients(id);
-                recipe.setSteps(steps);
-                recipe.setIngredients(ingredients);
+                if (recipe != null) {
+                    List<Step> steps = mRecipesDao.getSteps(id);
+                    List<Ingredient> ingredients = mRecipesDao.getIngredients(id);
+                    recipe.setSteps(steps);
+                    recipe.setIngredients(ingredients);
+                }
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {

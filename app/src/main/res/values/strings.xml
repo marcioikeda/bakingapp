@@ -7,7 +7,7 @@
     <string name="ingredients_title">Ingredients</string>
     <string name="steps_title">Steps</string>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
+    <string name="configure">Choose your recipe:</string>
     <string name="add_widget">Add widget</string>
     <string name="message_step_notfound">Recipe Step not found</string>
 
