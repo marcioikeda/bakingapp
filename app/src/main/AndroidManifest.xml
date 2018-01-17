@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".app.BakingApplication">
         <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,8 +29,7 @@
         </activity>
         <activity
             android:name=".recipe.StepActivity"
-            android:parentActivityName=".recipe.RecipeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".recipe.RecipeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.marcioikeda.bakingapp.recipe.RecipeActivity" />

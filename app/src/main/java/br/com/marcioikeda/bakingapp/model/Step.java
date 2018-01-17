@@ -16,7 +16,9 @@ import com.google.gson.annotations.SerializedName;
 @Entity(foreignKeys = @ForeignKey(
         entity = Recipe.class,
         parentColumns = "id",
-        childColumns = "idFk"))
+        childColumns = "idFk"),
+        primaryKeys = {"id", "idFk"},
+        tableName = "steps")
 public class Step implements Parcelable
 {
 
@@ -24,7 +26,6 @@ public class Step implements Parcelable
 
     @SerializedName("id")
     @Expose
-    @PrimaryKey
     private int id;
     @SerializedName("shortDescription")
     @Expose

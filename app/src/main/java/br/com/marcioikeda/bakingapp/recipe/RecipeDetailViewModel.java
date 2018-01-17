@@ -18,7 +18,8 @@ import br.com.marcioikeda.bakingapp.model.Recipe;
 
 public class RecipeDetailViewModel extends AndroidViewModel{
 
-    public MutableLiveData<Recipe> mRecipe = new MutableLiveData<>();
+    public MutableLiveData<Recipe> mRecipe;
+    public int recipeId = -1;
 
     private final RecipeRepository repos;
 
@@ -28,17 +29,23 @@ public class RecipeDetailViewModel extends AndroidViewModel{
     }
 
     public LiveData<Recipe> getRecipe(int id) {
-        repos.getRecipe(id, new RecipeDataSource.GetRecipeCallBack() {
-            @Override
-            public void onRecipeLoaded(Recipe recipe) {
-                mRecipe.setValue(recipe);
-            }
+        if (mRecipe == null) {
+            mRecipe = new MutableLiveData<>();
+            if (recipeId != id) {
+                repos.getRecipe(id, new RecipeDataSource.GetRecipeCallBack() {
+                    @Override
+                    public void onRecipeLoaded(Recipe recipe) {
+                        mRecipe.setValue(recipe);
+                    }
 
-            @Override
-            public void onDataNotAvailable() {
-                mRecipe.setValue(null);
+                    @Override
+                    public void onDataNotAvailable() {
+                        mRecipe.setValue(null);
+                    }
+                });
             }
-        });
+            recipeId = id;
+        }
 
         return mRecipe;
     }

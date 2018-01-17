@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import br.com.marcioikeda.bakingapp.model.Ingredient;
 import br.com.marcioikeda.bakingapp.model.Recipe;
+import br.com.marcioikeda.bakingapp.model.Step;
 import br.com.marcioikeda.bakingapp.util.AppExecutors;
 
 /**
@@ -45,6 +47,12 @@ public class RecipeLocalDataSource implements RecipeDataSource{
             @Override
             public void run() {
                 List<Recipe> recipes = mRecipesDao.getRecipes();
+                for (Recipe recipe: recipes) {
+                    List<Step> steps = mRecipesDao.getSteps(recipe.getId());
+                    List<Ingredient> ingredients = mRecipesDao.getIngredients(recipe.getId());
+                    recipe.setSteps(steps);
+                    recipe.setIngredients(ingredients);
+                }
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -66,6 +74,10 @@ public class RecipeLocalDataSource implements RecipeDataSource{
             @Override
             public void run() {
                 final Recipe recipe = mRecipesDao.getRecipe(id);
+                List<Step> steps = mRecipesDao.getSteps(id);
+                List<Ingredient> ingredients = mRecipesDao.getIngredients(id);
+                recipe.setSteps(steps);
+                recipe.setIngredients(ingredients);
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -87,6 +99,17 @@ public class RecipeLocalDataSource implements RecipeDataSource{
             @Override
             public void run() {
                 mRecipesDao.insertRecipes(recipes);
+
+                for (Recipe recipe: recipes) {
+                    for (Step step : recipe.getSteps()) {
+                        step.setIdFk(recipe.getId());
+                    }
+                    for (Ingredient ingredient : recipe.getIngredients()) {
+                        ingredient.setIdFk(recipe.getId());
+                    }
+                    mRecipesDao.insertSteps(recipe.getSteps());
+                    mRecipesDao.insertIngredients(recipe.getIngredients());
+                }
             }
         };
         mAppExecutors.diskIO().execute(runnable);
@@ -97,6 +120,8 @@ public class RecipeLocalDataSource implements RecipeDataSource{
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                mRecipesDao.deleteAllSteps();
+                mRecipesDao.deleteAllIngredients();
                 mRecipesDao.deleteAllRecipes();
             }
         };

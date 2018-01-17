@@ -19,11 +19,12 @@ import com.google.gson.annotations.SerializedName;
 @Entity(foreignKeys = @ForeignKey(
             entity = Recipe.class,
             parentColumns = "id",
-            childColumns = "idFk"))
+            childColumns = "idFk"),
+        tableName = "ingredients")
 public class Ingredient implements Parcelable
 {
     //This is not on json, but was created for Db.
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
 
     private int idFk;

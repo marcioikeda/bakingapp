@@ -2,11 +2,11 @@ package br.com.marcioikeda.bakingapp.recipe;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +26,9 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
     private Recipe mRecipe;
     private List<Object> items;
     private Context mContext;
+    private int selectedStepPosition = 0;
+    private int selectedStepId;
+    private boolean isTwoPane;
 
     private final int SERVINGS = 0;
     private final int TITLE = 1;
@@ -35,12 +38,13 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
     private ListItemClickListener mListener;
 
     public interface ListItemClickListener {
-        void onStepItemClick(Recipe recipe, Step step);
+        void onStepItemClick(int recipeId, int stepId);
     }
 
-    public IngredientStepAdapter(Context context, ListItemClickListener listener) {
+    public IngredientStepAdapter(Context context, ListItemClickListener listener, boolean twoPane) {
         mContext = context;
         mListener = listener;
+        isTwoPane = twoPane;
     }
 
     public void setRecipe(Recipe recipe) {
@@ -54,6 +58,8 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
         items.add(mContext.getString(R.string.ingredients_title));
         items.addAll(mRecipe.getIngredients());
         items.add(mContext.getString(R.string.steps_title));
+        if (isTwoPane)
+            selectedStepPosition = items.size();
         items.addAll(mRecipe.getSteps());
         notifyDataSetChanged();
     }
@@ -126,14 +132,17 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
             case INGREDIENT:
                 IngredientViewHolder viewHolder2 = (IngredientViewHolder) holder;
                 Ingredient ingredient = (Ingredient) items.get(position);
-                viewHolder2.tvIngredient.setText(ingredient.getIngredient());
-                viewHolder2.tvQuantity.setText(ingredient.getQuantity() + " " + ingredient.getMeasure());
+                viewHolder2.tvIngredient.setText(String.format("%s %s %s", ingredient.getIngredient(), ingredient.getQuantity(), ingredient.getMeasure()));
                 break;
             case STEP:
                 StepViewHolder viewHolder3 = (StepViewHolder) holder;
                 Step step = (Step) items.get(position);
                 viewHolder3.textView.setText(step.getShortDescription());
-                //Set tag ?
+                viewHolder3.stepContainer.setTag(step.getId());
+                viewHolder3.stepContainer.setSelected(selectedStepPosition == position);
+                if (selectedStepPosition == position) {
+                    this.selectedStepId = step.getId();
+                }
                 break;
         }
     }
@@ -141,6 +150,24 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return items != null ? items.size() : 0;
+    }
+
+    public int getSelectedStepId() {
+        return selectedStepId;
+    }
+
+    public void setSelectedStepId(int selectedStepId) {
+        //find step position and mark as selected
+        for (Object item: items) {
+            if (item instanceof Step) {
+                if (((Step) item).getId() == selectedStepId) {
+                    // Redraw the old selection and the new
+                    notifyItemChanged(selectedStepPosition);
+                    selectedStepPosition = items.indexOf(item);
+                    notifyItemChanged(selectedStepPosition);
+                }
+            }
+        }
     }
 
     class TitleViewHolder extends RecyclerView.ViewHolder {
@@ -154,25 +181,32 @@ public class IngredientStepAdapter extends RecyclerView.Adapter {
 
     class IngredientViewHolder extends RecyclerView.ViewHolder {
         TextView tvIngredient;
-        TextView tvQuantity;
 
         public IngredientViewHolder(View itemView) {
             super(itemView);
-            tvIngredient = itemView.findViewById(R.id.tv_ingredient_name);
-            tvQuantity = itemView.findViewById(R.id.tv_ingredient_quantity);
+            tvIngredient = itemView.findViewById(R.id.tv_ingredient);
         }
     }
 
     class StepViewHolder extends RecyclerView.ViewHolder {
+        View stepContainer;
         TextView textView;
 
         public StepViewHolder(View itemView) {
             super(itemView);
+            stepContainer = itemView.findViewById(R.id.step_container);
             textView = itemView.findViewById(R.id.tv_step_title);
-            textView.setOnClickListener(new View.OnClickListener() {
+            stepContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //mListener.onStepItemClick(mRecipe, );
+                    if (isTwoPane) {
+                        // Redraw the old selection and the new
+                        notifyItemChanged(selectedStepPosition);
+                        selectedStepPosition = getLayoutPosition();
+                        notifyItemChanged(selectedStepPosition);
+                    }
+                    int id = (int) stepContainer.getTag();
+                    mListener.onStepItemClick(mRecipe.getId(), id);
                 }
             });
         }

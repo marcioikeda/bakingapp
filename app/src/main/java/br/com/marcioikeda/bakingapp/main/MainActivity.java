@@ -33,22 +33,8 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         mRecyclerView = findViewById(R.id.rv_main);
         mRecyclerView.setAdapter(mListAdapter);
 
-        /*
-        if (Util.isSW600(this)) {
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(gridLayoutManager);
-        } else {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-        }
-        */
-
         RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         viewModel.getRecipes().observe(this, recipes -> {
-            ListIterator<Recipe> it = recipes.listIterator();
-            while(it.hasNext()) {
-                Log.d(TAG, it.next().getName());
-            }
             mListAdapter.setRecipes(recipes);
         });
 

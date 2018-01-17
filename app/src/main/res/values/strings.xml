@@ -9,4 +9,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
+    <string name="message_step_notfound">Recipe Step not found</string>
+
+    <string name="tools">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc rutrum iaculis ligula vitae convallis. Nulla a pharetra erat, eget condimentum nulla. Cras maximus ligula fringilla nulla laoreet varius. Morbi molestie nisi et tristique dapibus. Nunc et volutpat massa. Maecenas luctus id ligula commodo pellentesque. Proin ullamcorper tortor quis interdum aliquam. Donec feugiat sem quis ultricies tempor. Morbi pretium dictum viverra. Sed sit amet turpis sit amet justo tempor sagittis sed a tortor.</string>
 </resources>

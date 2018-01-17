@@ -5,24 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="24dp"
+    android:paddingEnd="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
-    <TextView
-        android:id="@+id/tv_ingredient_quantity"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:drawableStart="@drawable/bullet_list"
-        android:drawablePadding="8dp"
-        tools:text="@string/app_name"/>
+        android:padding="8dp"
+        android:src="@drawable/bullet_list"/>
 
     <TextView
-        android:id="@+id/tv_ingredient_name"
+        android:id="@+id/tv_ingredient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:text="@string/app_name"/>
+        tools:text="@string/tools"/>
 
 </LinearLayout>
