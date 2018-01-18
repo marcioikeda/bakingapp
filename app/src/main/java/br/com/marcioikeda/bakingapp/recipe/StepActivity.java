@@ -1,8 +1,10 @@
 package br.com.marcioikeda.bakingapp.recipe;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import br.com.marcioikeda.bakingapp.R;
+import br.com.marcioikeda.bakingapp.model.Recipe;
 import br.com.marcioikeda.bakingapp.model.Step;
 
 /**
@@ -59,41 +62,44 @@ public class StepActivity extends AppCompatActivity {
             navigateUpTo(intent);
         }
 
-        mViewModel.getRecipe(recipeId).observe(this, recipe -> {
-            mPagerAdapter = new StepPagerAdapter(getSupportFragmentManager(), recipe.getSteps(), recipe.getId());
-            mPager.setAdapter(mPagerAdapter);
-            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        mViewModel.getRecipe(recipeId).observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(@Nullable final Recipe recipe) {
+                mPagerAdapter = new StepPagerAdapter(getSupportFragmentManager(), recipe.getSteps(), recipe.getId());
+                mPager.setAdapter(mPagerAdapter);
+                mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    StepFragment cachedFragmentLeaving = mPagerAdapter.getHoldedItem(mCurrentItem);
-                    if (cachedFragmentLeaving != null) {
-                        cachedFragmentLeaving.loseVisibility();
-                    }
-                    mCurrentItem = position;
-                    StepFragment cachedFragmentEntering = mPagerAdapter.getHoldedItem(mCurrentItem);
-                    if (cachedFragmentEntering != null) {
-                        cachedFragmentEntering.gainVisibility();
                     }
 
-                    getSupportActionBar().setTitle(recipe.getSteps().get(position).getShortDescription());
-                }
+                    @Override
+                    public void onPageSelected(int position) {
+                        StepFragment cachedFragmentLeaving = mPagerAdapter.getHoldedItem(mCurrentItem);
+                        if (cachedFragmentLeaving != null) {
+                            cachedFragmentLeaving.loseVisibility();
+                        }
+                        mCurrentItem = position;
+                        StepFragment cachedFragmentEntering = mPagerAdapter.getHoldedItem(mCurrentItem);
+                        if (cachedFragmentEntering != null) {
+                            cachedFragmentEntering.gainVisibility();
+                        }
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
+                        getSupportActionBar().setTitle(recipe.getSteps().get(position).getShortDescription());
+                    }
 
-                }
-            });
-            List<Step> steps = recipe.getSteps();
-            int index = 0;
-            for (Iterator<Step> it = steps.iterator(); it.hasNext(); index++) {
-                Step step = it.next();
-                if (step.getId() == stepId) {
-                    mPager.setCurrentItem(index);
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
+                List<Step> steps = recipe.getSteps();
+                int index = 0;
+                for (Iterator<Step> it = steps.iterator(); it.hasNext(); index++) {
+                    Step step = it.next();
+                    if (step.getId() == stepId) {
+                        mPager.setCurrentItem(index);
+                    }
                 }
             }
         });

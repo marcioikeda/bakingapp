@@ -13,12 +13,14 @@ import com.google.gson.annotations.SerializedName;
  * Created by marcio.ikeda on 27/11/2017.
  */
 
-@Entity(foreignKeys = @ForeignKey(
-        entity = Recipe.class,
-        parentColumns = "id",
-        childColumns = "idFk"),
+@Entity(tableName = "steps",
         primaryKeys = {"id", "idFk"},
-        tableName = "steps")
+        foreignKeys = @ForeignKey(
+            entity = Recipe.class,
+            parentColumns = "id",
+            childColumns = "idFk",
+            onDelete = ForeignKey.CASCADE)
+        )
 public class Step implements Parcelable
 {
 

@@ -1,11 +1,13 @@
 package br.com.marcioikeda.bakingapp.recipe;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -27,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import br.com.marcioikeda.bakingapp.R;
+import br.com.marcioikeda.bakingapp.model.Recipe;
 import br.com.marcioikeda.bakingapp.model.Step;
 
 /**
@@ -63,7 +66,7 @@ public class StepFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_step, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_step, container, false);
 
         mPlayerView = rootView.findViewById(R.id.playerView);
         RecipeDetailViewModel mViewModel = ViewModelProviders.of(getActivity()).get(RecipeDetailViewModel.class);
@@ -75,20 +78,23 @@ public class StepFragment extends Fragment {
 
         if (getArguments().containsKey(RECIPE_ID) && getArguments().containsKey(STEP_ID)){
             int recipeId = getArguments().getInt(RECIPE_ID);
-            int stepId = getArguments().getInt(STEP_ID);
+            final int stepId = getArguments().getInt(STEP_ID);
 
-            mViewModel.getRecipe(recipeId).observe(this, recipe -> {
-                boolean stepFound = false;
-                for(Step step : recipe.getSteps()) {
-                    if(step.getId() == stepId) {
-                        stepFound = true;
-                        bindStep(rootView, step);
+            mViewModel.getRecipe(recipeId).observe(this, new Observer<Recipe>() {
+                @Override
+                public void onChanged(@Nullable Recipe recipe) {
+                    boolean stepFound = false;
+                    for (Step step : recipe.getSteps()) {
+                        if (step.getId() == stepId) {
+                            stepFound = true;
+                            bindStep(rootView, step);
+                        }
                     }
-                }
-                if (!stepFound) {
-                    Snackbar.make(rootView, R.string.message_step_notfound, Snackbar.LENGTH_SHORT);
-                }
+                    if (!stepFound) {
+                        Snackbar.make(rootView, R.string.message_step_notfound, Snackbar.LENGTH_SHORT);
+                    }
 
+                }
             });
         } else {
             Snackbar.make(rootView, R.string.message_step_notfound, Snackbar.LENGTH_SHORT);
@@ -140,7 +146,7 @@ public class StepFragment extends Fragment {
         }
     }
 
-    private void bindStep(View view, Step step) {
+    private void bindStep(View view, final Step step) {
         TextView textView = view.findViewById(R.id.item_detail);
         if (textView != null) {
             textView.append(step.getDescription());

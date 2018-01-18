@@ -50,7 +50,7 @@ public class RecipeRepository implements RecipeDataSource{
     }
 
     @Override
-    public void getRecipes(@NonNull RecipeDataSource.LoadRecipesCallBack callBack) {
+    public void getRecipes(@NonNull final RecipeDataSource.LoadRecipesCallBack callBack) {
         // Respond immediately with cache if available and not dirty
         if (mCachedRecipes != null && !mCacheIsDirty) {
             callBack.onRecipesLoaded(new ArrayList<>(mCachedRecipes.values()));
@@ -93,7 +93,7 @@ public class RecipeRepository implements RecipeDataSource{
     }
 
     @Override
-    public void getRecipe(int id, @NonNull GetRecipeCallBack callback) {
+    public void getRecipe(final int id, @NonNull final GetRecipeCallBack callback) {
         // Respond immediately with cache if available
         if (mCachedRecipes != null && !mCachedRecipes.isEmpty()) {
             Recipe recipe = mCachedRecipes.get(id);
@@ -154,7 +154,7 @@ public class RecipeRepository implements RecipeDataSource{
         mCacheIsDirty = true;
     }
 
-    private void getRecipesFromRemote(@NonNull LoadRecipesCallBack callback) {
+    private void getRecipesFromRemote(@NonNull final LoadRecipesCallBack callback) {
         mRecipeRemoteDataSource.getRecipes(new LoadRecipesCallBack() {
             @Override
             public void onRecipesLoaded(List<Recipe> recipes) {

@@ -16,11 +16,13 @@ import com.google.gson.annotations.SerializedName;
  * Created by marcio.ikeda on 27/11/2017.
  */
 
-@Entity(foreignKeys = @ForeignKey(
+@Entity(tableName = "ingredients",
+        foreignKeys = @ForeignKey(
             entity = Recipe.class,
             parentColumns = "id",
-            childColumns = "idFk"),
-        tableName = "ingredients")
+            childColumns = "idFk",
+            onDelete = ForeignKey.CASCADE)
+        )
 public class Ingredient implements Parcelable
 {
     //This is not on json, but was created for Db.

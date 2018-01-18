@@ -1,10 +1,12 @@
 package br.com.marcioikeda.bakingapp.recipe;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -44,7 +46,7 @@ public class RecipeActivity extends AppCompatActivity implements IngredientStepA
     private final static String  KEY_SELECTED_STEP_ID = "key_selected_step_id";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
 
@@ -56,21 +58,24 @@ public class RecipeActivity extends AppCompatActivity implements IngredientStepA
         if (extras != null) {
             int recipeId = extras.getInt(KEY_EXTRA_RECIPE);
             RecipeDetailViewModel viewModel = ViewModelProviders.of(this).get(RecipeDetailViewModel.class);
-            viewModel.getRecipe(recipeId).observe(this, recipe -> {
-                mToolbar.setTitle(recipe.getName());
-                setSupportActionBar(mToolbar);
-                setupRecyclerView(mRecyclerView, recipe);
+            viewModel.getRecipe(recipeId).observe(this, new Observer<Recipe>() {
+                @Override
+                public void onChanged(@Nullable Recipe recipe) {
+                    mToolbar.setTitle(recipe.getName());
+                    setSupportActionBar(mToolbar);
+                    setupRecyclerView(mRecyclerView, recipe);
 
-                //UI states for twopane:
-                if (mTwoPane) {
-                    if (savedInstanceState == null) {
-                        setupDefaultFragment(recipe);
-                    } else {
-                        int selectedStepid = savedInstanceState.getInt(KEY_SELECTED_STEP_ID);
-                        adapter.setSelectedStepId(selectedStepid);
-                        changeStepFragment(recipe.getId(), selectedStepid);
+                    //UI states for twopane:
+                    if (mTwoPane) {
+                        if (savedInstanceState == null) {
+                            setupDefaultFragment(recipe);
+                        } else {
+                            int selectedStepid = savedInstanceState.getInt(KEY_SELECTED_STEP_ID);
+                            adapter.setSelectedStepId(selectedStepid);
+                            changeStepFragment(recipe.getId(), selectedStepid);
+                        }
+
                     }
-
                 }
             });
         }

@@ -13,7 +13,7 @@ import br.com.marcioikeda.bakingapp.model.Step;
  * Created by marcio.ikeda on 11/12/2017.
  */
 
-@Database(entities={Recipe.class, Ingredient.class, Step.class}, version=1)
+@Database(entities={Recipe.class, Ingredient.class, Step.class}, version=2)
 public abstract class RecipeDatabase extends RoomDatabase {
     private static RecipeDatabase INSTANCE;
 
@@ -26,6 +26,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         RecipeDatabase.class, "recipes.db")
+                        .fallbackToDestructiveMigration() // TODO remove before release
                         .build();
             }
             return INSTANCE;

@@ -42,11 +42,11 @@ public class RecipeLocalDataSource implements RecipeDataSource{
 
 
     @Override
-    public void getRecipes(@NonNull LoadRecipesCallBack callback) {
+    public void getRecipes(@NonNull final LoadRecipesCallBack callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                List<Recipe> recipes = mRecipesDao.getRecipes();
+                final List<Recipe> recipes = mRecipesDao.getRecipes();
                 for (Recipe recipe: recipes) {
                     List<Step> steps = mRecipesDao.getSteps(recipe.getId());
                     List<Ingredient> ingredients = mRecipesDao.getIngredients(recipe.getId());
@@ -69,7 +69,7 @@ public class RecipeLocalDataSource implements RecipeDataSource{
     }
 
     @Override
-    public void getRecipe(int id, @NonNull GetRecipeCallBack callback) {
+    public void getRecipe(final int id, @NonNull final GetRecipeCallBack callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -96,7 +96,7 @@ public class RecipeLocalDataSource implements RecipeDataSource{
     }
 
     @Override
-    public void saveRecipes(@NonNull List<Recipe> recipes) {
+    public void saveRecipes(@NonNull final List<Recipe> recipes) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

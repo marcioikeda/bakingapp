@@ -39,7 +39,7 @@ public class RecipeRemoteDataSource {
         service = retrofit.create(RecipeAPI.class);
     }
 
-    public void getRecipes(@NonNull RecipeDataSource.LoadRecipesCallBack callback) {
+    public void getRecipes(@NonNull final RecipeDataSource.LoadRecipesCallBack callback) {
         Call<List<Recipe>> call = service.getRecipes();
         call.enqueue(new Callback<List<Recipe>>() {
             @Override

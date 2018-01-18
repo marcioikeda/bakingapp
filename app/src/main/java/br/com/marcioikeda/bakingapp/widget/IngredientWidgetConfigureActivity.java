@@ -1,11 +1,13 @@
 package br.com.marcioikeda.bakingapp.widget;
 
 import android.appwidget.AppWidgetManager;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -100,13 +102,16 @@ public class IngredientWidgetConfigureActivity extends AppCompatActivity {
         }
 
         RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        viewModel.getRecipes().observe(this, (List<Recipe> recipes) -> {
-            ArrayAdapter<Recipe> spinnerArrayAdapter = new ArrayAdapter<Recipe>
-                    (this, android.R.layout.simple_spinner_item,
-                            recipes); //selected item will look like a spinner set from XML
-            spinnerArrayAdapter.setDropDownViewResource(android.R.layout
-                    .simple_spinner_dropdown_item);
-            mAppWidgetSpinner.setAdapter(spinnerArrayAdapter);
+        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                ArrayAdapter<Recipe> spinnerArrayAdapter = new ArrayAdapter<Recipe>
+                        (IngredientWidgetConfigureActivity.this, android.R.layout.simple_spinner_item,
+                                recipes); //selected item will look like a spinner set from XML
+                spinnerArrayAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
+                mAppWidgetSpinner.setAdapter(spinnerArrayAdapter);
+            }
         });
     }
 

@@ -84,7 +84,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             tvServings = itemView.findViewById(R.id.tv_subtitle);
             ivImage = itemView.findViewById(R.id.iv_media);
             tvAction = itemView.findViewById(R.id.tv_action1);
-            tvAction.setOnClickListener(v -> mListener.onListItemClick(mRecipes.get(getAdapterPosition()).getId()));
+            tvAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onListItemClick(mRecipes.get(getAdapterPosition()).getId());
+                }
+            });
         }
     }
 }
