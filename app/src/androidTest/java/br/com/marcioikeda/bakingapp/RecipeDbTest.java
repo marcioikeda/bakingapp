@@ -8,7 +8,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

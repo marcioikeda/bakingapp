@@ -4,9 +4,6 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
-
-import java.util.List;
 
 import br.com.marcioikeda.bakingapp.data.RecipeDataSource;
 import br.com.marcioikeda.bakingapp.data.RecipeRepository;

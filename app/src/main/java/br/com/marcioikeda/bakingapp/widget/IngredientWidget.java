@@ -2,26 +2,15 @@ package br.com.marcioikeda.bakingapp.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
-
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import br.com.marcioikeda.bakingapp.R;
 import br.com.marcioikeda.bakingapp.data.RecipeDataSource;
 import br.com.marcioikeda.bakingapp.data.RecipeRepository;
-import br.com.marcioikeda.bakingapp.main.RecipeViewModel;
 import br.com.marcioikeda.bakingapp.model.Recipe;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Implementation of App Widget functionality.

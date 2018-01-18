@@ -3,18 +3,12 @@ package br.com.marcioikeda.bakingapp.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import br.com.marcioikeda.bakingapp.R;
 import br.com.marcioikeda.bakingapp.data.RecipeDataSource;
 import br.com.marcioikeda.bakingapp.data.RecipeRepository;
-import br.com.marcioikeda.bakingapp.model.Ingredient;
 import br.com.marcioikeda.bakingapp.model.Recipe;
 
 /**

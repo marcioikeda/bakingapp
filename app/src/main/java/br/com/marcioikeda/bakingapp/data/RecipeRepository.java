@@ -10,11 +10,6 @@ import java.util.Map;
 
 import br.com.marcioikeda.bakingapp.model.Recipe;
 import br.com.marcioikeda.bakingapp.util.AppExecutors;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by marcio.ikeda on 27/11/2017.

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import br.com.marcioikeda.bakingapp.model.Recipe;
-import br.com.marcioikeda.bakingapp.util.AppExecutors;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
